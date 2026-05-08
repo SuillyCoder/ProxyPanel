@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-dotenv
+sentence-transformers
+PyMuPDF
+python-docx
+langchain
+groq
+supabase

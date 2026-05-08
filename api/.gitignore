@@ -40,4 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.vscode/
+#Python cache folders
+venv/
+__pycache__/

@@ -1,0 +1,14 @@
+# api/index.py
+import os
+from fastapi import FastAPI
+from dotenv import load_dotenv
+
+# Load variables from .env file
+load_dotenv() 
+
+app = FastAPI()
+
+@app.get("/api/python")
+def hello_world():
+    secret = os.getenv("MY_SECRET_KEY", "default_value")
+    return {"message": "Hello from FastAPI", "secret": secret}
