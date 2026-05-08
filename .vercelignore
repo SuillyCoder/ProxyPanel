@@ -1,0 +1,6 @@
+api/venv
+api/__pycache__
+api/*.pyc
+api/requirements.txt
+api/render.yaml
+api/.env
