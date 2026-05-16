@@ -7,3 +7,4 @@ python-docx
 langchain
 groq
 supabase
+httpx

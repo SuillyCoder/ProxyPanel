@@ -2,6 +2,7 @@
 import os
 from fastapi import FastAPI
 from dotenv import load_dotenv
+from routers import parse
 
 # Load variables from .env file
 load_dotenv() 

@@ -18,9 +18,17 @@ export default function LoginPage() {
       password 
     });
     setLoading(false);
+    
+    console.log("data:", data);
+    console.log("error:", error);
+    console.log("session:", data?.session);
+
     if (error) return setError(error.message);
     if (data.session) {
-      window.location.href = "/dashboard";
+      console.log("redirecting now...");
+      window.location.replace("../dashboard");
+    } else {
+      setError("No session returned.");
     }
   }
 
