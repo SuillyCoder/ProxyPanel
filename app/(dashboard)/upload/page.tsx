@@ -70,6 +70,26 @@ export default function UploadPage() {
         return;
       }
 
+      console.log("Calling parse endpoint with:", {
+      manuscript_id: manuscriptData.id,
+      file_url: publicUrl,
+      file_name: file.name,
+    });
+
+    const parseRes = await fetch("/api/py/parse", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        manuscript_id: manuscriptData.id,
+        file_url: publicUrl,
+        file_name: file.name,
+      }),
+    });
+
+    const rawText = await parseRes.json();
+    console.log("Parse raw response:", rawText);
+    console.log("Parse status:", parseRes.status);
+
       await fetch("/api/py/parse", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

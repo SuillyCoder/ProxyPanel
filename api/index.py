@@ -9,6 +9,8 @@ load_dotenv()
 
 app = FastAPI()
 
+app.include_router(parse.router)
+
 @app.get("/api/python")
 def hello_world():
     secret = os.getenv("MY_SECRET_KEY", "default_value")

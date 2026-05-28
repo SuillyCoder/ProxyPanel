@@ -4,13 +4,17 @@ from services.parser import extract_text_from_url
 from services.chunker import chunk_text
 from services.embedder import generate_embeddings
 from supabase import create_client
+from dotenv import load_dotenv
 import os
+
+load_dotenv()  # ← add this at the top of parse.py too
 
 router = APIRouter()
 
+# Move client creation here, after load_dotenv()
 supabase = create_client(
     os.getenv("NEXT_PUBLIC_SUPABASE_PROJECT_URL"),
-    os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+    os.getenv("NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY")
 )
 
 class ParseRequest(BaseModel):
@@ -18,26 +22,22 @@ class ParseRequest(BaseModel):
     file_url: str
     file_name: str
 
-@router.post("/api/parse")
+@router.post("/api/parse")            # ← this was missing entirely
 async def parse_manuscript(req: ParseRequest):
     try:
-        # 1. Extract text from file
         print(f"Extracting text from {req.file_name}...")
         text = await extract_text_from_url(req.file_url, req.file_name)
-        
+
         if not text:
             raise HTTPException(status_code=400, detail="Could not extract text from file.")
-        
-        # 2. Chunk the text
+
         print("Chunking text...")
         chunks = chunk_text(text)
         print(f"Created {len(chunks)} chunks")
-        
-        # 3. Generate embeddings
+
         print("Generating embeddings...")
         embeddings = generate_embeddings(chunks)
-        
-        # 4. Store chunks + embeddings in Supabase
+
         print("Storing in Supabase...")
         rows = [
             {
@@ -48,14 +48,16 @@ async def parse_manuscript(req: ParseRequest):
             }
             for i, (chunk, embedding) in enumerate(zip(chunks, embeddings))
         ]
-        
+
         supabase.table("document_chunks").insert(rows).execute()
-        
+
         return {
             "success": True,
             "chunks_created": len(chunks),
             "manuscript_id": req.manuscript_id
         }
-    
+
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
