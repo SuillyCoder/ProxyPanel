@@ -8,3 +8,4 @@ langchain
 groq
 supabase
 httpx
+langchain-text-splitters
