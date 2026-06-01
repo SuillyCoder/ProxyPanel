@@ -1,10 +1,14 @@
-import httpx
-import os
+from fastembed import TextEmbedding
 
-async def generate_embeddings(chunks: list[str]) -> list[list[float]]:
-    api_url = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
-    headers = {"Authorization": f"Bearer {os.getenv('HF_TOKEN', '')}"}
-    
-    async with httpx.AsyncClient(timeout=30) as client:
-        response = await client.post(api_url, json={"inputs": chunks})
-        return response.json()
+_model = None
+
+def get_model():
+    global _model
+    if _model is None:
+        _model = TextEmbedding("BAAI/bge-small-en-v1.5")
+    return _model
+
+def generate_embeddings(chunks: list[str]) -> list[list[float]]:
+    model = get_model()
+    embeddings = list(model.embed(chunks))
+    return [e.tolist() for e in embeddings]

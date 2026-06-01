@@ -3,8 +3,8 @@ uvicorn
 python-dotenv
 PyMuPDF
 python-docx
-langchain
+langchain-text-splitters
 groq
 supabase
 httpx
-langchain-text-splitters
+fastembed

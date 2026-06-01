@@ -36,7 +36,7 @@ async def parse_manuscript(req: ParseRequest):
         print(f"Created {len(chunks)} chunks")
 
         print("Generating embeddings...")
-        embeddings = await generate_embeddings(chunks)
+        embeddings = generate_embeddings(chunks)
 
         print("Storing in Supabase...")
         rows = [
