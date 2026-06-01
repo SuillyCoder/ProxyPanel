@@ -34,6 +34,12 @@ export default function DashboardPage() {
           Upload Manuscript
         </button>
         <button
+          onClick={() => router.push("/session")}
+          className="bg-primary text-primary-foreground rounded px-4 py-2 text-sm font-medium"
+        >
+          View Panel Sessions
+        </button>
+        <button
           onClick={handleLogout}
           className="border rounded px-4 py-2 text-sm"
         >

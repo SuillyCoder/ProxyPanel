@@ -19,7 +19,17 @@ def extractFromPDF(file_bytes: bytes) -> str:
     text = "" #Set empty text
     with fitz.open(stream=file_bytes, filetype="pdf") as doc:  #Open the document and extract each of the pages collectively as 'doc'
         for page in doc: #for each page
-            text += page.get_text() #Add to the strip of text
+            text += page.get_text("text", sort=True) #Add to the strip of text
+    text = text.strip()
+
+    if not text: 
+      with fitz.open(stream=file_bytes, filetype="pdf") as doc:
+            for page in doc:
+                blocks = page.get_text("blocks")
+                for block in blocks:
+                    if block[6] == 0:  # text block, not image
+                        text += block[4] + "\n"
+
     return text.strip() #Return said strip of text
 
 def extractFromDOCX(file_bytes: bytes) -> str:
