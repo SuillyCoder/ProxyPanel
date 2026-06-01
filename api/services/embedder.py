@@ -1,9 +1,10 @@
-from sentence_transformers import SentenceTransformer
+import httpx
+import os
 
-# Load model once at module level — don't reload on every request
-model = SentenceTransformer("all-MiniLM-L6-v2")
-
-def generate_embeddings(chunks: list[str]) -> list[list[float]]:
-    """Generate 384-dim embeddings for each chunk."""
-    embeddings = model.encode(chunks, show_progress_bar=False)
-    return embeddings.tolist()
+async def generate_embeddings(chunks: list[str]) -> list[list[float]]:
+    api_url = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
+    headers = {"Authorization": f"Bearer {os.getenv('HF_TOKEN', '')}"}
+    
+    async with httpx.AsyncClient(timeout=30) as client:
+        response = await client.post(api_url, json={"inputs": chunks})
+        return response.json()
