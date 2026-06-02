@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { Suspense } from "react";
 
-export default function ConfigurePage() {
+function ConfigureContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const manuscriptId = searchParams.get("manuscript_id");
@@ -128,5 +129,17 @@ export default function ConfigurePage() {
         </button>
       </div>
     </main>
+  );
+}
+
+export default function ConfigurePage() {
+  return (
+    <Suspense fallback={
+      <main className="flex min-h-screen items-center justify-center">
+        <p className="text-muted-foreground text-sm">Loading...</p>
+      </main>
+    }>
+      <ConfigureContent />
+    </Suspense>
   );
 }
