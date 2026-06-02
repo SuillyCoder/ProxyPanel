@@ -13,6 +13,7 @@ function ConfigureContent() {
 
   const [numQuestions, setNumQuestions] = useState(5);
   const [difficulty, setDifficulty] = useState("medium");
+  const [sessionType, setSessionType] = useState("typed answer");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -55,7 +56,7 @@ function ConfigureContent() {
         if (!genRes.ok) throw new Error(genResult.detail || "Failed to generate questions");
 
       // Redirect to question generation
-      router.push(`/session/${sessionData.id}?manuscript_id=${manuscriptId}&difficulty=${difficulty}&num_questions=${numQuestions}`);
+      router.push(`/session/${sessionData.id}?manuscript_id=${manuscriptId}&difficulty=${difficulty}&num_questions=${numQuestions}&session_type=${encodeURIComponent(sessionType)}`);
 
     } catch (err: any) {
       setError(err.message);
@@ -108,6 +109,26 @@ function ConfigureContent() {
                 }`}
               >
                 {d}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Session Type */}
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium">Session Type</label>
+          <div className="flex gap-2">
+            {["typed answer", "oral"].map((s) => (
+              <button
+                key={s}
+                onClick={() => setSessionType(s)}
+                className={`flex-1 py-2 rounded text-sm font-medium border capitalize transition-colors ${
+                  sessionType === s
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "border-border hover:bg-muted"
+                }`}
+              >
+                {s}
               </button>
             ))}
           </div>
